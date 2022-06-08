@@ -1,5 +1,6 @@
 package jh.project.lookupbl.service;
 
+import jh.project.lookupbl.dto.Hbl;
 import jh.project.lookupbl.form.HblForm;
 import jh.project.lookupbl.xmlObject.CargCsclPrgsInfoQryRtnVoTag;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.util.List;
 
 @SpringBootTest
 public class MainServiceTest {
@@ -75,19 +78,13 @@ public class MainServiceTest {
     @Autowired
     private MainService mainService;
 
-    @Value("${TEST_SINGLE_HBL_NO}")
-    public String hblNo;
-
-    @Value("${TEST_SINGLE_HBL_YEAR}")
-    public String hblYear;
-
     @Test
-    void 단일_하우스비엘검색_언마셜_테스트() {
+    void 단일_하우스비엘검색_언마셜() {
         //given
 
         HblForm hblForm = new HblForm();
-        hblForm.setHblNo(hblNo);
-        hblForm.setBlYy(hblYear);
+        hblForm.setHblNo("CCIK205095");
+        hblForm.setBlYy("2020");
 
         //when
 
@@ -163,5 +160,21 @@ public class MainServiceTest {
             System.out.println(e);
         }
         System.out.println("테스트 종료");
+    }
+
+    @Test
+    void 단일_하우스비엘_번호추출() {
+
+        HblForm hblForm = new HblForm();
+        hblForm.setHblNo("    CC IK2  05095 ,  96, 9  7,98  ");
+        hblForm.setBlYy("2020");
+
+        List<Hbl> testList = mainService.extractHblNo(hblForm);
+
+        System.out.println(testList);
+        for (int i = 0; i < testList.size(); i++) {
+            System.out.println(testList.get(i).getHblNo());
+        }
+
     }
 }

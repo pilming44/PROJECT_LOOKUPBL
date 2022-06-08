@@ -70,7 +70,7 @@ public class MainService {
         form.setHblNo(form.getHblNo().trim());
 
         //구문문자체크
-        String[] checkSplit = form.getHblNo().split(",|/|-|~");
+        String[] checkSplit = form.getHblNo().split(",|/|-");
 
         //구분문자가있을경우
         if(checkSplit.length > 1) {
@@ -82,22 +82,16 @@ public class MainService {
                     tempHbl.setHblNo(checkSplit[i]);
                 } else { //추가적인 번호가 있으면
                     int cuttingLength = checkSplit[i].length();
-                    System.out.println(cuttingLength + " : 자를 길이");
-                    System.out.println(checkSplit[0] + " : 0번째 문자열, 기준문자열");
                     checkSplit[i] = checkSplit[0].substring(0, checkSplit[0].length()-cuttingLength) + checkSplit[i];
-                    System.out.println(checkSplit[0].substring(0, checkSplit[0].length()-cuttingLength) + " : 자른후0번째 문자열");
-                    System.out.println(checkSplit[i]+ " : 수정된 문자열");
                     tempHbl.setHblYear(form.getBlYy());
                     tempHbl.setHblNo(checkSplit[i]);
                 }
-
                 hblList.add(tempHbl);
             }
         } else { //구분문자가 없을때 그냥 추가
             Hbl tempHbl = new Hbl();
             tempHbl.setHblYear(form.getBlYy());
             tempHbl.setHblNo(checkSplit[0]);
-
             hblList.add(tempHbl);
         }
 
