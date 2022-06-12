@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>LOOKUP B/L</title>
-</head>
+    <link rel="stylesheet" href="./css/bootstrap.min.css"></head>
 <body>
-    <t1>hello lookupbl</t1>
-    <input type="text">
+<script type="text/javascript" src="./js/bootstrap.js"></script>
+<div class ="col-lg-6">
+    <form>
+        <fieldset>
+            <div class="form-group">
+                <label class="col-form-label col-form-label-lg mt-4" for="inputLarge">B/L번호 입력</label>
+                <input class="form-control form-control-lg" type="text" placeholder="House B/L 번호를 입력하세요." id="inputLarge">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </fieldset>
+    </form>
+</div>
+
 </body>
 </html>
