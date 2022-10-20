@@ -3,7 +3,12 @@ package jh.project.lookupbl.service;
 import jh.project.lookupbl.dto.CargCsclPrgs;
 import jh.project.lookupbl.dto.Hbl;
 import jh.project.lookupbl.form.HblForm;
+import jh.project.lookupbl.form.MblForm;
 import jh.project.lookupbl.xmlObject.CargCsclPrgsInfoQryRtnVoTag;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.spi.LoggerFactoryBinder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MainService {
 
     @Value("${API0001.URL}")
@@ -26,6 +32,9 @@ public class MainService {
 
     @Value("${API0001.KEY}")
     private String key;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
 
 //    언마셜 방법 사용해서 아래방법 제외
 //    Document lookupHbl(HblForm form) throws ParserConfigurationException, IOException, SAXException {
@@ -43,23 +52,55 @@ public class MainService {
 //        return doc;
 //    }
 
-    public CargCsclPrgsInfoQryRtnVoTag lookupHbl(HblForm form) throws Exception {
+    public List<CargCsclPrgsInfoQryRtnVoTag> lookupHbl(List<HblForm> form) throws Exception {
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); //한글인코딩설정
-        String restApiUrl = apiUrl + key + "&hblNo=" +form.getHblNo() + "&blYy=" + form.getBlYy();
+        List<CargCsclPrgsInfoQryRtnVoTag> returnList = new ArrayList<>();
 
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(restApiUrl);
-        doc.getDocumentElement().normalize();
+        for(int i = 0; i < form.size(); i++) {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); //한글인코딩설정
+            String restApiUrl = apiUrl + key + "&hblNo=" +form.get(i).getHblNo() + "&blYy=" + form.get(i).getBlYy();
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(CargCsclPrgsInfoQryRtnVoTag.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(restApiUrl);
+            doc.getDocumentElement().normalize();
 
-        CargCsclPrgsInfoQryRtnVoTag cargCsclPrgsInfoQryRtnVoTag = (CargCsclPrgsInfoQryRtnVoTag) unmarshaller.unmarshal(doc);
+            JAXBContext jaxbContext = JAXBContext.newInstance(CargCsclPrgsInfoQryRtnVoTag.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-        return cargCsclPrgsInfoQryRtnVoTag;
+            CargCsclPrgsInfoQryRtnVoTag cargCsclPrgsInfoQryRtnVoTag = (CargCsclPrgsInfoQryRtnVoTag) unmarshaller.unmarshal(doc);
+            returnList.add(cargCsclPrgsInfoQryRtnVoTag);
+        }
+
+        logger.debug("================테스트===============");
+
+        return returnList;
+    }
+    public List<CargCsclPrgsInfoQryRtnVoTag> lookupMbl(List<MblForm> form) throws Exception {
+
+        List<CargCsclPrgsInfoQryRtnVoTag> returnList = new ArrayList<>();
+
+        for(int i = 0; i < form.size(); i++) {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); //한글인코딩설정
+            String restApiUrl = apiUrl + key + "&mblNo=" +form.get(i).getMblNo() + "&blYy=" + form.get(i).getBlYy();
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(restApiUrl);
+            doc.getDocumentElement().normalize();
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(CargCsclPrgsInfoQryRtnVoTag.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            CargCsclPrgsInfoQryRtnVoTag cargCsclPrgsInfoQryRtnVoTag = (CargCsclPrgsInfoQryRtnVoTag) unmarshaller.unmarshal(doc);
+            returnList.add(cargCsclPrgsInfoQryRtnVoTag);
+        }
+
+        logger.debug("================테스트===============");
+
+        return returnList;
     }
 
     public List<Hbl> extractHblNo(HblForm form) {

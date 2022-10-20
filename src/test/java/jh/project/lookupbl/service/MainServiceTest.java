@@ -2,6 +2,7 @@ package jh.project.lookupbl.service;
 
 import jh.project.lookupbl.dto.Hbl;
 import jh.project.lookupbl.form.HblForm;
+import jh.project.lookupbl.form.MblForm;
 import jh.project.lookupbl.xmlObject.CargCsclPrgsInfoQryRtnVoTag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -77,84 +79,127 @@ public class MainServiceTest {
 //    }
     @Autowired
     private MainService mainService;
-
     @Test
-    void 단일_하우스비엘검색_언마셜() {
+    void 마스터비엘검색_언마셜() {
         //given
+        List<MblForm> mblFormList = new ArrayList<>();
+
+        MblForm mblForm = new MblForm();
+        mblForm.setMblNo("18065047345");
+        mblForm.setBlYy("2020");
+        mblFormList.add(mblForm);
+
+        MblForm mblForm2 = new MblForm();
+        mblForm2.setMblNo("18091998174");
+        mblForm2.setBlYy("2021");
+        mblFormList.add(mblForm2);
+
+        //when
+        List<CargCsclPrgsInfoQryRtnVoTag> result = null;
+        try{
+            result = mainService.lookupMbl(mblFormList);
+
+            //then
+            for(CargCsclPrgsInfoQryRtnVoTag v : result) {
+                System.out.println(v);
+            }
+
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.println("테스트 종료");
+    }
+    @Test
+    void 하우스비엘검색_언마셜() {
+        //given
+        List<HblForm> hblFormList = new ArrayList<>();
 
         HblForm hblForm = new HblForm();
         hblForm.setHblNo("CCIK205095");
         hblForm.setBlYy("2020");
-
+        hblFormList.add(hblForm);
+        HblForm hblForm2 = new HblForm();
+        hblForm2.setHblNo("CCIK205096");
+        hblForm2.setBlYy("2020");
+        hblFormList.add(hblForm2);
+        HblForm hblForm3 = new HblForm();
+        hblForm3.setHblNo("CCIK205097");
+        hblForm3.setBlYy("2020");
+        hblFormList.add(hblForm3);
         //when
 
-        CargCsclPrgsInfoQryRtnVoTag result = null;
+        List<CargCsclPrgsInfoQryRtnVoTag> result = null;
         try{
-            result = mainService.lookupHbl(hblForm);
+            result = mainService.lookupHbl(hblFormList);
 
             //then
-            System.out.println("NtceInfo: " + result.getNtceInfo());
-            System.out.println("TCnt: " + result.getTCnt());
-            if(Integer.parseInt(result.getTCnt()) > 0) {
-                System.out.println("----------------------------------------개요----------------------------------------------");
-                System.out.println("cargMtNo : "+result.getCargCsclPrgsInfoQryVoTag().getCargMtNo());
-                System.out.println("prgsStts : "+result.getCargCsclPrgsInfoQryVoTag().getPrgsStts());
-                System.out.println("prgsStCd : "+result.getCargCsclPrgsInfoQryVoTag().getPrgsStCd());
-                System.out.println("shipNat : "+result.getCargCsclPrgsInfoQryVoTag().getShipNat());
-                System.out.println("shipNatNm : "+result.getCargCsclPrgsInfoQryVoTag().getShipNatNm());
-                System.out.println("mblNo : "+result.getCargCsclPrgsInfoQryVoTag().getMblNo());
-                System.out.println("hblNo : "+result.getCargCsclPrgsInfoQryVoTag().getHblNo());
-                System.out.println("agnc : "+result.getCargCsclPrgsInfoQryVoTag().getAgnc());
-                System.out.println("shcoFlcoSgn : "+result.getCargCsclPrgsInfoQryVoTag().getShcoFlcoSgn());
-                System.out.println("shcoFlco : "+result.getCargCsclPrgsInfoQryVoTag().getShcoFlco());
-                System.out.println("cargTp : "+result.getCargCsclPrgsInfoQryVoTag().getCargTp());
-                System.out.println("ldprCd : "+result.getCargCsclPrgsInfoQryVoTag().getLdprCd());
-                System.out.println("ldprNm : "+result.getCargCsclPrgsInfoQryVoTag().getLdprNm());
-                System.out.println("lodCntyCd : "+result.getCargCsclPrgsInfoQryVoTag().getLodCntyCd());
-                System.out.println("shipNm : "+result.getCargCsclPrgsInfoQryVoTag().getShipNm());
-                System.out.println("pckGcnt : "+result.getCargCsclPrgsInfoQryVoTag().getPckGcnt());
-                System.out.println("pckUt : "+result.getCargCsclPrgsInfoQryVoTag().getPckUt());
-                System.out.println("blPt : "+result.getCargCsclPrgsInfoQryVoTag().getBlPt());
-                System.out.println("blPtNm : "+result.getCargCsclPrgsInfoQryVoTag().getBlPtNm());
-                System.out.println("dsprCd : "+result.getCargCsclPrgsInfoQryVoTag().getDsprCd());
-                System.out.println("dsprNm : "+result.getCargCsclPrgsInfoQryVoTag().getDsprNm());
-                System.out.println("etprCstm : "+result.getCargCsclPrgsInfoQryVoTag().getEtprCstm());
-                System.out.println("etprDt : "+result.getCargCsclPrgsInfoQryVoTag().getEtprDt());
-                System.out.println("msrm : "+result.getCargCsclPrgsInfoQryVoTag().getMsrm());
-                System.out.println("ttwg : "+result.getCargCsclPrgsInfoQryVoTag().getTtwg());
-                System.out.println("wghtUt : "+result.getCargCsclPrgsInfoQryVoTag().getWghtUt());
-                System.out.println("prnm : "+result.getCargCsclPrgsInfoQryVoTag().getPrnm());
-                System.out.println("cntrGcnt : "+result.getCargCsclPrgsInfoQryVoTag().getCntrGcnt());
-                System.out.println("cntrNo : "+result.getCargCsclPrgsInfoQryVoTag().getCntrNo());
-                System.out.println("csclPrgsStts : "+result.getCargCsclPrgsInfoQryVoTag().getCsclPrgsStts());
-                System.out.println("prcsDttm : "+result.getCargCsclPrgsInfoQryVoTag().getPrcsDttm());
-                System.out.println("frwrSgn : "+result.getCargCsclPrgsInfoQryVoTag().getFrwrSgn());
-                System.out.println("frwrEntsConm : "+result.getCargCsclPrgsInfoQryVoTag().getFrwrEntsConm());
-                System.out.println("vydf : "+result.getCargCsclPrgsInfoQryVoTag().getVydf());
-                System.out.println("spcnCargCd : "+result.getCargCsclPrgsInfoQryVoTag().getSpcnCargCd());
-                System.out.println("mtTrgtCargYnNm : "+result.getCargCsclPrgsInfoQryVoTag().getMtTrgtCargYnNm());
-                System.out.println("rlseDtyPridPassTpcd : "+result.getCargCsclPrgsInfoQryVoTag().getRlseDtyPridPassTpcd());
-                System.out.println("dclrDelyAdtxYn : "+result.getCargCsclPrgsInfoQryVoTag().getDclrDelyAdtxYn());
-                System.out.println("---------------------------------------------------------------------------------------");
-                System.out.println("---------------------------------------------------------------------------------------");
-                System.out.println("---------------------------상세단계-------------------------------------------------------");
-                for(int i =0; i < Integer.parseInt(result.getTCnt()); i++) {
-                    System.out.println("cargTrcnRelaBsopTpcd : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getCargTrcnRelaBsopTpcd());
-                    System.out.println("rlbrDttm : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getRlbrDttm());
-                    System.out.println("rlbrCn : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getRlbrCn());
-                    System.out.println("wght : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getWght());
-                    System.out.println("shedSgn : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getShedSgn());
-                    System.out.println("shedNm : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getShedNm());
-                    System.out.println("dclrNo : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getDclrNo());
-                    System.out.println("rlbrBssNo : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getRlbrBssNo());
-                    System.out.println("bfhnGdncCn : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getBfhnGdncCn());
-                    System.out.println("pckGcnt : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getPckGcnt());
-                    System.out.println("pckUt : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getPckUt());
-                    System.out.println("wghtUt : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getWghtUt());
-                    System.out.println("prcsDttm : "+result.getCargCsclPrgsInfoDtlQryVoTag().get(i).getPrcsDttm());
-                    System.out.println("---------------------------------------------------------------------------------------");
-                }
+            for(CargCsclPrgsInfoQryRtnVoTag v : result) {
+                System.out.println(v);
+//                System.out.println("NtceInfo: " + v.getNtceInfo());
+//                System.out.println("TCnt: " + v.getTCnt());
+//                if(Integer.parseInt(v.getTCnt()) > 0) {
+//                    System.out.println("----------------------------------------개요----------------------------------------------");
+//                    System.out.println("cargMtNo : "+v.getCargCsclPrgsInfoQryVoTag().getCargMtNo());
+//                    System.out.println("prgsStts : "+v.getCargCsclPrgsInfoQryVoTag().getPrgsStts());
+//                    System.out.println("prgsStCd : "+v.getCargCsclPrgsInfoQryVoTag().getPrgsStCd());
+//                    System.out.println("shipNat : "+v.getCargCsclPrgsInfoQryVoTag().getShipNat());
+//                    System.out.println("shipNatNm : "+v.getCargCsclPrgsInfoQryVoTag().getShipNatNm());
+//                    System.out.println("mblNo : "+v.getCargCsclPrgsInfoQryVoTag().getMblNo());
+//                    System.out.println("hblNo : "+v.getCargCsclPrgsInfoQryVoTag().getHblNo());
+//                    System.out.println("agnc : "+v.getCargCsclPrgsInfoQryVoTag().getAgnc());
+//                    System.out.println("shcoFlcoSgn : "+v.getCargCsclPrgsInfoQryVoTag().getShcoFlcoSgn());
+//                    System.out.println("shcoFlco : "+v.getCargCsclPrgsInfoQryVoTag().getShcoFlco());
+//                    System.out.println("cargTp : "+v.getCargCsclPrgsInfoQryVoTag().getCargTp());
+//                    System.out.println("ldprCd : "+v.getCargCsclPrgsInfoQryVoTag().getLdprCd());
+//                    System.out.println("ldprNm : "+v.getCargCsclPrgsInfoQryVoTag().getLdprNm());
+//                    System.out.println("lodCntyCd : "+v.getCargCsclPrgsInfoQryVoTag().getLodCntyCd());
+//                    System.out.println("shipNm : "+v.getCargCsclPrgsInfoQryVoTag().getShipNm());
+//                    System.out.println("pckGcnt : "+v.getCargCsclPrgsInfoQryVoTag().getPckGcnt());
+//                    System.out.println("pckUt : "+v.getCargCsclPrgsInfoQryVoTag().getPckUt());
+//                    System.out.println("blPt : "+v.getCargCsclPrgsInfoQryVoTag().getBlPt());
+//                    System.out.println("blPtNm : "+v.getCargCsclPrgsInfoQryVoTag().getBlPtNm());
+//                    System.out.println("dsprCd : "+v.getCargCsclPrgsInfoQryVoTag().getDsprCd());
+//                    System.out.println("dsprNm : "+v.getCargCsclPrgsInfoQryVoTag().getDsprNm());
+//                    System.out.println("etprCstm : "+v.getCargCsclPrgsInfoQryVoTag().getEtprCstm());
+//                    System.out.println("etprDt : "+v.getCargCsclPrgsInfoQryVoTag().getEtprDt());
+//                    System.out.println("msrm : "+v.getCargCsclPrgsInfoQryVoTag().getMsrm());
+//                    System.out.println("ttwg : "+v.getCargCsclPrgsInfoQryVoTag().getTtwg());
+//                    System.out.println("wghtUt : "+v.getCargCsclPrgsInfoQryVoTag().getWghtUt());
+//                    System.out.println("prnm : "+v.getCargCsclPrgsInfoQryVoTag().getPrnm());
+//                    System.out.println("cntrGcnt : "+v.getCargCsclPrgsInfoQryVoTag().getCntrGcnt());
+//                    System.out.println("cntrNo : "+v.getCargCsclPrgsInfoQryVoTag().getCntrNo());
+//                    System.out.println("csclPrgsStts : "+v.getCargCsclPrgsInfoQryVoTag().getCsclPrgsStts());
+//                    System.out.println("prcsDttm : "+v.getCargCsclPrgsInfoQryVoTag().getPrcsDttm());
+//                    System.out.println("frwrSgn : "+v.getCargCsclPrgsInfoQryVoTag().getFrwrSgn());
+//                    System.out.println("frwrEntsConm : "+v.getCargCsclPrgsInfoQryVoTag().getFrwrEntsConm());
+//                    System.out.println("vydf : "+v.getCargCsclPrgsInfoQryVoTag().getVydf());
+//                    System.out.println("spcnCargCd : "+v.getCargCsclPrgsInfoQryVoTag().getSpcnCargCd());
+//                    System.out.println("mtTrgtCargYnNm : "+v.getCargCsclPrgsInfoQryVoTag().getMtTrgtCargYnNm());
+//                    System.out.println("rlseDtyPridPassTpcd : "+v.getCargCsclPrgsInfoQryVoTag().getRlseDtyPridPassTpcd());
+//                    System.out.println("dclrDelyAdtxYn : "+v.getCargCsclPrgsInfoQryVoTag().getDclrDelyAdtxYn());
+//                    System.out.println("---------------------------------------------------------------------------------------");
+//                    System.out.println("---------------------------------------------------------------------------------------");
+//                    System.out.println("---------------------------상세단계-------------------------------------------------------");
+//                    for(int i =0; i < Integer.parseInt(v.getTCnt()); i++) {
+//                        System.out.println("cargTrcnRelaBsopTpcd : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getCargTrcnRelaBsopTpcd());
+//                        System.out.println("rlbrDttm : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getRlbrDttm());
+//                        System.out.println("rlbrCn : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getRlbrCn());
+//                        System.out.println("wght : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getWght());
+//                        System.out.println("shedSgn : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getShedSgn());
+//                        System.out.println("shedNm : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getShedNm());
+//                        System.out.println("dclrNo : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getDclrNo());
+//                        System.out.println("rlbrBssNo : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getRlbrBssNo());
+//                        System.out.println("bfhnGdncCn : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getBfhnGdncCn());
+//                        System.out.println("pckGcnt : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getPckGcnt());
+//                        System.out.println("pckUt : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getPckUt());
+//                        System.out.println("wghtUt : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getWghtUt());
+//                        System.out.println("prcsDttm : "+v.getCargCsclPrgsInfoDtlQryVoTag().get(i).getPrcsDttm());
+//                        System.out.println("---------------------------------------------------------------------------------------");
+//                    }
+//                }
             }
+
         }
         catch (Exception e) {
             System.out.println(e);

@@ -24,7 +24,7 @@ public class CargCsclPrgsInfoQryRtnVoTag {
     private String tCnt; // 검색결과 카운트, 오류시 코드 -1
 
     @XmlElement(name = "cargCsclPrgsInfoQryVo")
-    private CargCsclPrgsInfoQryVoTag cargCsclPrgsInfoQryVoTag; //진행정보 개요
+    private List<CargCsclPrgsInfoQryVoTag> cargCsclPrgsInfoQryVoTag; //진행정보 개요
 
     @XmlElement(name = "cargCsclPrgsInfoDtlQryVo")
     private List<CargCsclPrgsInfoDtlQryVoTag> cargCsclPrgsInfoDtlQryVoTag; //진행정보상세단계

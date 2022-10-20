@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script th:inline="javascript">
+
+        var app = $("#box");
+        console.log(app.find("[blnum]").val());
 
         //현재 년도
         var now = new Date();
@@ -24,9 +28,14 @@
         const remove = (obj) => {
             document.getElementById('box').removeChild(obj.parentNode);
         }
+
+        window.onload = function() {
+            console.log(cargCsclPrgsInfoQryRtnVoTag);
+        };
+
     </script>
 </head>
-<body>
+<body id = "testApp">
 <script type="text/javascript" src="./js/bootstrap.js"></script>
 <form th:action = "@{/test}" th:object="${hblForm}" action="#" id="blForm" method="post">
     <div id="box">
@@ -34,7 +43,7 @@
             <select th:field="*{blYy}">
                 <option th:value="*{blYy}" selected th:text="*{blYy}"></option>
             </select>
-            <input type="text" th:field="*{hblNo}">
+            <input type="text" th:field="*{hblNo}" value="test" blnum>
         </div>
     </div>
     <div>
