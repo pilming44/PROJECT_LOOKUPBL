@@ -2,43 +2,36 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script th:inline="javascript">
-
-        var app = $("#box");
-        console.log(app.find("[blnum]").val());
-
-        //현재 년도
-        var now = new Date();
-        var nowYear = now.getFullYear();
-
-        const add_input = () => {
-            const box = document.getElementById("box");
-            const newDiv = document.createElement('div');
-            newDiv.innerHTML = "\
-                <select name = 'blYy'>\
-                    <option value = '"+(nowYear+1)+"'>"+(nowYear+1)+"</option>\
-                    <option value = '"+nowYear+"'  selected>"+nowYear+"</option>\
-                    <option value = '"+(nowYear-1)+"'>"+(nowYear-1)+"</option>\
-                    <option value = '"+(nowYear-2)+"'>"+(nowYear-2)+"</option>\
-                </select>\
-                <input type='text' name='hblNo'>\
-                <input type='button' value='삭제' onclick='remove(this)'>";
-            box.appendChild(newDiv);
-        }
-        const remove = (obj) => {
-            document.getElementById('box').removeChild(obj.parentNode);
-        }
-
-        window.onload = function() {
-            console.log(cargCsclPrgsInfoQryRtnVoTag);
-        };
-
-    </script>
 </head>
-<body id = "testApp">
-<script type="text/javascript" src="./js/bootstrap.js"></script>
-<form th:action = "@{/test}" th:object="${hblForm}" action="#" id="blForm" method="post">
-    <div id="box">
+<body>
+<div>
+    <div id="searchPage">
+        <div id="infoBox">
+            <form action="/test" method="post">
+                <select name = "inputBoxCount" inputBoxCount>
+                    <th:block th:each="num : ${#numbers.sequence(1,10)}">
+                        <option th:value="${num}" th:text="${num}" th:selected="${num} == ${result.inputBoxCount}">1</option>
+                    </th:block>
+                </select>
+                <th:block th:each="num : ${#numbers.sequence(0,result.inputBoxCount-1)}">
+                    <div>
+                        <select th:name = "${'hblList[' + num + '].blYy'}">
+                            <option th:each="year : ${result.yearList}" th:value="${year}"
+                                    th:text="${year}" th:selected="${year} == ${result.currentYear}">2022</option>
+                        </select>
+                        <input th:name = "${'hblList[' + num + '].hblNo'}" type="text" th:if="${result.hblForm.hblList.size() == 0}"
+                               value="" blnum>
+                        <input th:name = "${'hblList[' + num + '].hblNo'}" type="text" th:unless="${result.hblForm.hblList.size() == 0}"
+                               th:value="${result.hblForm.hblList[num].hblNo}" blnum>
+                    </div>
+                </th:block>
+                <button type="submit" submitBtn>Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<!--    <div id="box">
         <div>
             <select th:field="*{blYy}">
                 <option th:value="*{blYy}" selected th:text="*{blYy}"></option>
@@ -50,8 +43,20 @@
         <input type="button" value="추가" onclick="add_input()">
     </div>
     <div>
+        <button type="button" btnSearch>출력버튼</button>
         <button type="submit">제출</button>
-    </div>
-</form>
-</body>
+    </div>-->
+
+<script th:inline="javascript">
+    var app = $("#searchPage");
+
+    //inputBoxCount변경되면 변경된 갯수만큼 inputBox생성
+    app.find("[inputBoxCount]").change(function() {
+            location.href = '/test?inputBoxCount='+app.find("[inputBoxCount]").val();
+		});
+
+    window.onload = function() {
+        //console.log(cargCsclPrgsInfoQryRtnVoTag);
+    };
+</script>
 </html>

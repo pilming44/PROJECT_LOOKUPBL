@@ -52,6 +52,7 @@ public class MainService {
 //        return doc;
 //    }
 
+    //하우스비엘 번호 검색
     public List<CargCsclPrgsInfoQryRtnVoTag> lookupHbl(List<HblForm> form) throws Exception {
 
         List<CargCsclPrgsInfoQryRtnVoTag> returnList = new ArrayList<>();
@@ -59,7 +60,7 @@ public class MainService {
         for(int i = 0; i < form.size(); i++) {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); //한글인코딩설정
-            String restApiUrl = apiUrl + key + "&hblNo=" +form.get(i).getHblNo() + "&blYy=" + form.get(i).getBlYy();
+            String restApiUrl = apiUrl + key + "&hblNo=" +form.get(i).getHblNo().toUpperCase() + "&blYy=" + form.get(i).getBlYy();
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -77,6 +78,8 @@ public class MainService {
 
         return returnList;
     }
+
+    //마스터비엘 검색
     public List<CargCsclPrgsInfoQryRtnVoTag> lookupMbl(List<MblForm> form) throws Exception {
 
         List<CargCsclPrgsInfoQryRtnVoTag> returnList = new ArrayList<>();
@@ -103,6 +106,7 @@ public class MainService {
         return returnList;
     }
 
+    //비엘번호 추출
     public List<Hbl> extractHblNo(HblForm form) {
         List<Hbl> hblList = new ArrayList<>();
 
