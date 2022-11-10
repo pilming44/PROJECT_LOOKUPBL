@@ -48,7 +48,7 @@
                                     <td th:text = "|${info.pckGcnt}${info.pckUt}|">데이터</td>
                                 </tr>
                                 <tr>
-                                    <td class="table-secondary text-center" colspan="6" th:text="|조회시간 : ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}|">현재시간</td>
+                                    <td class="table-secondary text-center" colspan="6" th:text="${result.formatedNow}">현재시간</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -59,7 +59,7 @@
                             <table class="table">
                                 <thead class="table-secondary">
                                     <tr>
-                                        <th rowspan="2">No.</th>
+                                        <th rowspan="2" class="text-center align-middle">No.</th>
                                         <th>처리단계</th>
                                         <th>장치장/장치위치</th>
                                         <th>포장개수</th>
@@ -78,11 +78,11 @@
                                 <th:block th:each="detail, detailStat : ${list.cargCsclPrgsInfoDtlQryVoTag}">
                                         <th:block th:if="${detailStat.even}">
                                             <tr class="table-secondary">
-                                                <th rowspan="2" th:text = "${detailStat.size} - ${detailStat.index}">No.</th>
+                                                <th rowspan="2" class="text-center align-middle" th:text = "${detailStat.size} - ${detailStat.index}">No.</th>
                                                 <td th:text = "${detail.cargTrcnRelaBsopTpcd}">처리단계</td>
                                                 <td th:text = "${detail.shedSgn}">장치장/장치위치</td>
                                                 <td th:text = "|${detail.pckGcnt}${detail.pckUt}|">포장개수</td>
-                                                <td th:text = "${detail.prcsDttm}">반출입(처리)일시</td>
+                                                <td th:text = "${detail.rlbrDttm}">반출입(처리)일시</td>
                                                 <td th:text = "${detail.dclrNo}">신고번호</td>
                                             </tr>
                                             <tr class="table-secondary">
@@ -92,14 +92,20 @@
                                                 <td th:text = "${detail.rlbrCn}">반출입(처리)내용</td>
                                                 <td th:text = "${detail.rlbrBssNo}">반출입근거번호</td>
                                             </tr>
+                                            <th:block th:if="${not #strings.isEmpty(detail.bfhnGdncCn)}">
+                                                <tr class="table-secondary text-center">
+                                                    <td colspan="6" th:text = "${detail.bfhnGdncCn}">사전안내내용</td>
+                                                </tr>
+                                            </th:block>
+
                                         </th:block>
                                         <th:block th:if="${detailStat.odd}">
                                             <tr>
-                                                <th rowspan="2" th:text = "${detailStat.size} - ${detailStat.index}">No.</th>
+                                                <th rowspan="2" class="text-center align-middle" th:text = "${detailStat.size} - ${detailStat.index}">No.</th>
                                                 <td th:text = "${detail.cargTrcnRelaBsopTpcd}">처리단계</td>
                                                 <td th:text = "${detail.shedSgn}">장치장/장치위치</td>
                                                 <td th:text = "|${detail.pckGcnt}${detail.pckUt}|">포장개수</td>
-                                                <td th:text = "${detail.prcsDttm}">반출입(처리)일시</td>
+                                                <td th:text = "${detail.rlbrDttm}">반출입(처리)일시</td>
                                                 <td th:text = "${detail.dclrNo}">신고번호</td>
                                             </tr>
                                             <tr>
@@ -109,6 +115,11 @@
                                                 <td th:text = "${detail.rlbrCn}">반출입(처리)내용</td>
                                                 <td th:text = "${detail.rlbrBssNo}">반출입근거번호</td>
                                             </tr>
+                                            <th:block th:if="${not #strings.isEmpty(detail.bfhnGdncCn)}">
+                                                <tr class="text-center">
+                                                    <td colspan="6" th:text = "${detail.bfhnGdncCn}">사전안내내용</td>
+                                                </tr>
+                                            </th:block>
                                         </th:block>
 
                                 </th:block>

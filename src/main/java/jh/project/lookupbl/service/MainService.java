@@ -55,13 +55,16 @@ public class MainService {
     //하우스비엘 번호 검색
     public List<CargCsclPrgsInfoQryRtnVoTag> lookupHbl(List<HblForm> form) throws Exception {
 
+        //유효성 검사 및 비엘번호 추출
+        List<HblForm> refineData = extractHblNo(form);
+
         List<CargCsclPrgsInfoQryRtnVoTag> returnList = new ArrayList<>();
 
-        for(int i = 0; i < form.size(); i++) {
+        for(int i = 0; i < refineData.size(); i++) {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); //한글인코딩설정
-            String restApiUrl = apiUrl + key + "&hblNo=" +form.get(i).getHblNo().toUpperCase() + "&blYy=" + form.get(i).getBlYy();
-
+            String restApiUrl = apiUrl + key + "&hblNo=" +refineData.get(i).getHblNo() + "&blYy=" + refineData.get(i).getBlYy();
+            logger.debug("blYy : {} / hblNo : {}", refineData.get(i).getBlYy(), refineData.get(i).getHblNo());
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(restApiUrl);
@@ -107,39 +110,47 @@ public class MainService {
     }
 
     //비엘번호 추출
-    public List<Hbl> extractHblNo(HblForm form) {
-        List<Hbl> hblList = new ArrayList<>();
+    public List<HblForm> extractHblNo(List<HblForm> form) {
 
-        //공백제거
-        form.setHblNo(form.getHblNo().replaceAll(" ", ""));
-        form.setHblNo(form.getHblNo().trim());
+        List<HblForm> returnHblList = new ArrayList<>();
 
-        //구문문자체크
-        String[] checkSplit = form.getHblNo().split(",|/|-");
-
-        //구분문자가있을경우
-        if(checkSplit.length > 1) {
-            for(int i =0; i < checkSplit.length; i++) {
-                Hbl tempHbl = new Hbl();
-
-                if(i == 0) { //첫 기준 문자
-                    tempHbl.setHblYear(form.getBlYy());
-                    tempHbl.setHblNo(checkSplit[i]);
-                } else { //추가적인 번호가 있으면
-                    int cuttingLength = checkSplit[i].length();
-                    checkSplit[i] = checkSplit[0].substring(0, checkSplit[0].length()-cuttingLength) + checkSplit[i];
-                    tempHbl.setHblYear(form.getBlYy());
-                    tempHbl.setHblNo(checkSplit[i]);
-                }
-                hblList.add(tempHbl);
-            }
-        } else { //구분문자가 없을때 그냥 추가
-            Hbl tempHbl = new Hbl();
-            tempHbl.setHblYear(form.getBlYy());
-            tempHbl.setHblNo(checkSplit[0]);
-            hblList.add(tempHbl);
+        //길이가 0이라면 null리턴
+        if(form.size() == 0) {
+            return null;
         }
 
-        return hblList;
+        for(HblForm hf : form) {
+            //공백 제거, 대문자로 변경
+            String blYy = hf.getBlYy();
+            String blNum = hf.getHblNo().replaceAll(" ","").toUpperCase();
+
+            //구문문자체크
+            String[] checkSplit = blNum.split(",|/|-");
+
+            //구분문자가 있을때
+            if(checkSplit.length > 1) {
+                for(int i =0; i < checkSplit.length; i++) {
+                    HblForm tempHBl = new HblForm();
+
+                    if(i == 0) { //첫 기준 문자는 그대로 추가
+                        tempHBl.setBlYy(blYy);
+                        tempHBl.setHblNo(checkSplit[i]);
+                    } else { //추가적인 번호가 있으면 추가번호의 길이만큼 첫 기준문자를 지우고 붙임
+                        int cuttingLength = checkSplit[i].length();
+                        checkSplit[i] = checkSplit[0].substring(0, checkSplit[0].length()-cuttingLength) + checkSplit[i];
+                        tempHBl.setBlYy(blYy);
+                        tempHBl.setHblNo(checkSplit[i]);
+                    }
+                    returnHblList.add(tempHBl);
+                }
+            } else {
+                //구분문자가 없을때 그대로 추가
+                HblForm tempHBl = new HblForm();
+                tempHBl.setBlYy(blYy);
+                tempHBl.setHblNo(blNum);
+                returnHblList.add(tempHBl);
+            }
+        }
+        return returnHblList;
     }
 }
