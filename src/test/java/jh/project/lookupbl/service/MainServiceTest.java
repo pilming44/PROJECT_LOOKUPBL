@@ -214,12 +214,12 @@ public class MainServiceTest {
         hblForm.setHblNo("    CC IK2  05095 ,  96, 9  7,98  ");
         hblForm.setBlYy("2020");
 
-        List<Hbl> testList = mainService.extractHblNo(hblForm);
+        //List<Hbl> testList = mainService.extractHblNo(hblForm);
 
-        System.out.println(testList);
+        /*System.out.println(testList);
         for (int i = 0; i < testList.size(); i++) {
             System.out.println(testList.get(i).getHblNo());
-        }
+        }*/
 
     }
 }
