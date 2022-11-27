@@ -26,17 +26,17 @@
                                 <tbody>
                                 <tr>
                                     <th class="table-secondary">M B/L - H B/L</th>
-                                    <td th:text = "|${info.mblNo} - ${info.hblNo}|">데이터</td>
+                                    <td th:text = "${info.mblNo}?| ${info.mblNo} - ${info.hblNo}|: ${info.hblNo}">데이터</td>
                                     <th class="table-secondary">진행상태</th>
-                                    <td th:text = "${info.prgsStts}">진행상태 값</td>
+                                    <td th:text = "${info.prgsStts}?:_">데이터가 없습니다.</td>
                                     <th class="table-secondary">처리일시</th>
                                     <td th:text = "${info.prcsDttm}">처리일시 값</td>
                                 </tr>
                                 <tr>
                                     <th class="table-secondary">품명</th>
-                                    <td colspan="3" th:text = "${info.prnm}">데이터</td>
+                                    <td colspan="3" th:text = "${info.prnm}?:${list.ntceInfo}">데이터</td>
                                     <th class="table-secondary">총 중량</th>
-                                    <td th:text = "|${info.ttwg}${info.wghtUt}|">데이터</td>
+                                    <td th:text = "${info.ttwg}?|${info.ttwg}${info.wghtUt}|: _"></td>
 
                                 </tr>
                                 <tr>
@@ -45,7 +45,7 @@
                                     <th class="table-secondary">선박/항공편명</th>
                                     <td th:text = "${info.shipNm}">데이터</td>
                                     <th class="table-secondary">포장개수</th>
-                                    <td th:text = "|${info.pckGcnt}${info.pckUt}|">데이터</td>
+                                    <td th:text = "${info.pckGcnt}? |${info.pckGcnt}${info.pckUt}| : _"></td>
                                 </tr>
                                 <tr>
                                     <td class="table-secondary text-center" colspan="6" th:text="${result.formatedNow}">현재시간</td>
@@ -75,6 +75,11 @@
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: 12px;">
+                                <th:block th:if="${list.tCnt == '0'}" >
+                                    <tr>
+                                        <th colspan="6" class="text-center align-middle">데이터가 없습니다.</th>
+                                    </tr>
+                                </th:block>
                                 <th:block th:each="detail, detailStat : ${list.cargCsclPrgsInfoDtlQryVoTag}">
                                         <th:block th:if="${detailStat.even}">
                                             <tr class="table-secondary">
@@ -131,6 +136,10 @@
             </th:block>
             </th:block>
             </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type="button" submitBtn>다시조회</button>
+            <button class="btn btn-primary" type="button" submitBtn>처음으로</button>
         </div>
     </div>
     <div id ="bottom" class="row"></div>

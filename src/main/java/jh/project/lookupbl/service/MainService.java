@@ -5,6 +5,7 @@ import jh.project.lookupbl.dto.Hbl;
 import jh.project.lookupbl.form.HblForm;
 import jh.project.lookupbl.form.MblForm;
 import jh.project.lookupbl.xmlObject.CargCsclPrgsInfoQryRtnVoTag;
+import jh.project.lookupbl.xmlObject.CargCsclPrgsInfoQryVoTag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,23 +36,6 @@ public class MainService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-
-//    언마셜 방법 사용해서 아래방법 제외
-//    Document lookupHbl(HblForm form) throws ParserConfigurationException, IOException, SAXException {
-//        CargCsclPrgs cargCsclPrgs = new CargCsclPrgs();
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); //한글인코딩설정
-//        String restApiUrl = apiUrl + key + "&hblNo=" +form.getHblNo() + "&blYy=" + form.getBlYy();
-//        //String result = restTemplate.getForObject(restApiUrl, String.class);
-//
-//        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//        Document doc = dBuilder.parse(restApiUrl);
-//        doc.getDocumentElement().normalize();
-//        return doc;
-//    }
-
     //하우스비엘 번호 검색
     public List<CargCsclPrgsInfoQryRtnVoTag> lookupHbl(List<HblForm> form) throws Exception {
 
@@ -74,6 +58,14 @@ public class MainService {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             CargCsclPrgsInfoQryRtnVoTag cargCsclPrgsInfoQryRtnVoTag = (CargCsclPrgsInfoQryRtnVoTag) unmarshaller.unmarshal(doc);
+            if(cargCsclPrgsInfoQryRtnVoTag.getTCnt().equals("0")) {
+                //조회가 안될경우 bl번호만 입력
+                List<CargCsclPrgsInfoQryVoTag> tempList = new ArrayList<>();
+                CargCsclPrgsInfoQryVoTag tempTag = new CargCsclPrgsInfoQryVoTag();
+                tempTag.setHblNo(refineData.get(i).getHblNo());
+                tempList.add(tempTag);
+                cargCsclPrgsInfoQryRtnVoTag.setCargCsclPrgsInfoQryVoTag(tempList);
+            }
             returnList.add(cargCsclPrgsInfoQryRtnVoTag);
         }
 

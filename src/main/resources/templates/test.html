@@ -7,7 +7,7 @@
 <div>
     <div id="searchPage">
         <div id="infoBox">
-            <form action="/test" method="post">
+            <form action="/lookupResult" method="get">
                 <select name = "inputBoxCount" inputBoxCount>
                     <th:block th:each="num : ${#numbers.sequence(1,10)}">
                         <option th:value="${num}" th:text="${num}" th:selected="${num} == ${result.inputBoxCount}">1</option>

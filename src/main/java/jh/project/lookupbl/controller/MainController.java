@@ -36,11 +36,6 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/lookupResult")
-    public String lookupResult() {
-        return "lookupResult";
-    }
-
     @GetMapping("/test")
     public String test(@ModelAttribute HblForm hblForm, Model model) {
 
@@ -67,26 +62,14 @@ public class MainController {
         return "test";
     }
 
-    @PostMapping("/test")
+    @GetMapping("/lookupResult")
     public String testPost(Model model, @ModelAttribute HblForm hblForm) throws Exception {
-
         for(HblForm data : hblForm.getHblList()) {
+            if(data.getHblNo() == null) {
+                data.setHblNo("");
+            }
             logger.debug("data.getBlYy : {} / data.getHblNo : {}", data.getBlYy(), data.getHblNo());
         }
-//
-//        List<Hbl> extractHblList = new ArrayList<>();
-//
-//        for(int i =0; i < hblList.size(); i++) {
-//            extractHblList.addAll(mainService.extractHblNo(hblList.get(i)));
-//        }
-//        HblForm hblForm1 = new HblForm();
-//        for (int i = 0; i < extractHblList.size(); i++) {
-//            System.out.println(i+1+"번째 bl" + extractHblList.get(i).getHblYear() + " / " + extractHblList.get(i).getHblNo());
-//            hblForm1.setBlYy(extractHblList.get(i).getHblYear());
-//            hblForm1.setHblNo(extractHblList.get(i).getHblNo());
-//        }
-//
-//
         //검색 결과가 담길 리스트
         List<CargCsclPrgsInfoQryRtnVoTag> cargCsclPrgsInfoQryRtnVoTag = mainService.lookupHbl(hblForm.getHblList());
         // 현재 날짜/시간
@@ -100,9 +83,10 @@ public class MainController {
         //시간 포맷설정
         SimpleDateFormat oldDtFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         SimpleDateFormat newDtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logger.debug("결과 : {}", cargCsclPrgsInfoQryRtnVoTag);
         for(CargCsclPrgsInfoQryRtnVoTag temp : cargCsclPrgsInfoQryRtnVoTag) {
-            if(temp.getCargCsclPrgsInfoQryVoTag() == null) {
-                break;
+            if(temp.getTCnt().equals("0") || temp.getTCnt().equals("-1")) {
+                continue;
             }
             //데이터값 포맷팅
             for(CargCsclPrgsInfoQryVoTag info : temp.getCargCsclPrgsInfoQryVoTag()) {
@@ -121,28 +105,6 @@ public class MainController {
                 dtl.setPrcsDttm(strNewDtFormat);
             }
         }
-
-
-
-
-//        // 현재 날짜 구하기
-//        LocalDate now = LocalDate.now();
-//        // 2년 전
-//        int year = now.getYear() - 2;
-//        logger.debug("현재년도 : {}", year);
-//        List<Integer> yearList = new ArrayList<>();
-//        yearList.add(year);
-//
-//        for(int i =1; i <= 3; i++) {
-//            yearList.add(year+i);
-//        }
-//        logger.debug("년도리스트 : {}", yearList);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("inputBoxCount", hblForm.getInputBoxCount());
-//        result.put("yearList", yearList);
-//        result.put("currentYear", now.getYear());
-//        result.put("hblForm", hblForm);
-
 
         Map<String, Object> result = new HashMap<>();
         result.put("lookupResult", cargCsclPrgsInfoQryRtnVoTag);
